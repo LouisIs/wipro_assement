@@ -1,0 +1,82 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+
+@model IPagedList<wipro_assement.Models.Student>
+
+@{
+    ViewData["Title"] = "Index";
+    var nameSortby = ViewBag.SortbyNameParameter;
+    var stpSortBy = ViewBag.SortbyStdparameter;
+}
+
+<h1>Index</h1>
+
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+
+    <p>
+        @using (Html.BeginForm("Index", "Students", FormMethod.Get))
+        {
+            <b>Searsh By: </b>
+            @Html.RadioButton("searchby","Name", true)
+
+            <text>Name</text>
+            @Html.RadioButton("searchby", "Std") <text>Std</text> <br />
+            @Html.TextBox("search")
+            <input type="submit" value="Search" />
+        }
+
+    </p>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.ActionLink("Sname", "Index", new {sortBy = nameSortby })
+                </th>
+                <th>
+                    @Html.ActionLink("Std", "Index", new {sortBy = stpSortBy})
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="4"> No rows student found</td>
+                    </tr>
+
+                }
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Std)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Rollno">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Rollno">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Rollno">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page,
+                                                                  searchby = ViewContext.HttpContext.Request.Query["searchby"],
+                                                                  search = ViewContext.HttpContext.Request.Query["search"]}))
+
+
+
+</div>

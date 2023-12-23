@@ -1,7 +1,18 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using wipro_assement.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+string LocalconnectionString = builder.Configuration.GetConnectionString("DefaultConnnection");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlite(LocalconnectionString));
+
+
 
 var app = builder.Build();
 
